@@ -31,6 +31,8 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/home';
 
+    public $successStatus = 200;
+
     /**
      * Create a new controller instance.
      *
@@ -38,9 +40,10 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
-        $this->middleware('guest:admin')->except('logout');
-        $this->middleware('guest:driver')->except('logout');
+        //$this->middleware('guest')->except('logout');
+        //$this->middleware('guest:admin')->except('logout');
+        //$this->middleware('guest:driver')->except('logout');
+        $this->middleware('auth:api', ['except' => ['login']]);
     }
 
     public function showAdminLoginForm()
@@ -54,76 +57,43 @@ class LoginController extends Controller
             'password' => 'required|min:6'
         ]);
 
-        if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
+        //Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))
+        //Auth::guard('driver')->attempt(['phone' => $request->phone, 'password' => $request->password], $request->get('remember'))
+        //Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))
 
+        if (Auth::attempt([
+            'email' => $request->email,
+            'password' => $request->password,
+        ])) {
             $user = Auth::user();
-            $this->setSession([
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'role' => $user->role,
-                'guard' => 'web'
-            ]);
-            return redirect()->intended('/home');
+            $response = [
+                'success' => 1,
+                'message' => __('messages.loggedin'),
+                'token' => $user->createToken('MyApp')->accessToken,
+                'data' => $user,
+            ];
+
+            return response()->json($response, $this->successStatus);
+        } else {
+            return response()->json([
+                'success' => 0,
+                'message' => __('messages.invalid_email_pass'),
+            ], $this->successStatus);
         }
-        return back()->withInput($request->only('email', 'remember'));
-    }
-
-    public function adminLogin(Request $request)
-    {
-        $this->validate($request, [
-            'email'   => 'required|email',
-            'password' => 'required|min:6'
-        ]);
-
-        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
-
-            $user = Auth::guard('admin')->user();
-            $this->setSession([
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'role' => $user->role,
-                'guard' => 'admin'
-            ]);
-            return redirect()->intended('/admin');
-        }
-        return back()->withInput($request->only('email', 'remember'));
-    }
-
-    public function showDriverLoginForm()
-    {
-        return view('auth.login', ['url' => 'driver']);
-    }
-
-    public function driverLogin(Request $request)
-    {
-        $this->validate($request, [
-            'phone'   => 'required',
-            'password' => 'required|min:6'
-        ]);
-
-        if (Auth::guard('driver')->attempt(['phone' => $request->phone, 'password' => $request->password], $request->get('remember'))) {
-            $user = Auth::guard('driver')->user();
-            $this->setSession([
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'role' => $user->role,
-                'guard' => 'driver'
-            ]);
-            return redirect()->intended('/driver');
-        }
-        return back()->withInput($request->only('phone', 'remember'));
     }
 
     public function logout(){
-        request()->session()->flush();
-        Auth::logout();
-        return redirect('/home');
-    }
-
-    private function setSession($arr){
-        Session::put('user', $arr);
+        if (Auth::check()) {
+            Auth::user()->token()->revoke();
+            return response()->json([
+                'success' => 1,
+                'message' => __('messages.loggedout'),
+            ], $this->successStatus);
+        } else {
+            return response()->json([
+                'success' => 0,
+                'message' => __('messages.error_msg', ['error_code' => 'Auth']),
+            ], $this->successStatus);
+        }
     }
 }

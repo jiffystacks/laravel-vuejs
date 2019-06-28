@@ -1,5 +1,5 @@
-# Laravel Multi-User Auth
-A simple restaurant application with three type of users(Admin, User, Driver) all of them have different tables.
+# Laravel VueJs
+Extendend [laravel multi auth](https://github.com/jiffystacks-technologies/laravel-multi-auth) with Vuejs
 
 ## Users & Role
 - Admin (Role: admin, super-admin)
@@ -13,6 +13,15 @@ A simple restaurant application with three type of users(Admin, User, Driver) al
 
 ## Included
 * [Laravel 5.8](https://laravel.com/docs/5.8)
+* [Laravel Passport](https://laravel.com/docs/5.8/passport)
+* [Vue](https://vuejs.org)
+* [Vue Router](http://router.vuejs.org)
+* [Vuex](http://vuex.vuejs.org)
+* [Axios](https://github.com/mzabriskie/axios)
+* [Authentication with JWT Token](https://github.com/tymondesigns/jwt-auth)
+* [Vuetify](https://vuetifyjs.com/en/getting-started/quick-start)
+* [Font Awesome](https://fontawesome.com)
+
 
 ## Installation:
 * Clone the repo
@@ -21,6 +30,10 @@ A simple restaurant application with three type of users(Admin, User, Driver) al
 * Run `composer install`
 * Run `php artisan key:generate`
 * Run `php artisan migrate --seed`
+* Run `php artisan passport:install`
+
+* Run `npm install`
+* Run `npm run dev` or `npm run watch`
 
 ## License
 
