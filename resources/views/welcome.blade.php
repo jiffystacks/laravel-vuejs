@@ -16,6 +16,7 @@
     <body>
         <div class="flex-center position-ref full-height">
             <div class="content" id="app">
+                <main-app/>
             </div>
         </div>
         <script src="{{ asset('/js/app.js') }}"></script>

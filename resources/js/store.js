@@ -1,5 +1,4 @@
-// Lib imports
-import { getLocalUser } from "../helpers";
+import { getLocalUser } from "./helpers/auth";
 
 const user = getLocalUser();
 

@@ -13,12 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('login', 'AuthController@login');
-Route::post('logout', 'AuthController@logout');
-Route::post('refresh', 'AuthController@refresh');
-Route::post('me', 'AuthController@me');
+Route::post('/login', 'Auth\LoginController@login');
 
 
 Route::group(['middleware' => 'auth:api'], function(){
-    
+    Route::get('/customers', 'CommonController@customer');
 });

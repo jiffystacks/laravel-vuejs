@@ -46,11 +46,6 @@ class LoginController extends Controller
         $this->middleware('auth:api', ['except' => ['login']]);
     }
 
-    public function showAdminLoginForm()
-    {
-        return view('auth.login', ['url' => 'admin']);
-    }
-
     public function login(Request $request){
         $this->validate($request, [
             'email'   => 'required|email',
@@ -61,16 +56,20 @@ class LoginController extends Controller
         //Auth::guard('driver')->attempt(['phone' => $request->phone, 'password' => $request->password], $request->get('remember'))
         //Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))
 
+        $guard = 'api';
+        if(!empty($request->guard)){
+            $guard = $request->guard;
+        }
         if (Auth::attempt([
             'email' => $request->email,
             'password' => $request->password,
         ])) {
-            $user = Auth::user();
+            $user = $this->guard($guard)->user();
             $response = [
                 'success' => 1,
+                'access_token' => $user->createToken('MyApp')->accessToken,
+                'user' => $user,
                 'message' => __('messages.loggedin'),
-                'token' => $user->createToken('MyApp')->accessToken,
-                'data' => $user,
             ];
 
             return response()->json($response, $this->successStatus);
@@ -95,5 +94,9 @@ class LoginController extends Controller
                 'message' => __('messages.error_msg', ['error_code' => 'Auth']),
             ], $this->successStatus);
         }
+    }
+
+    public function guard($guard = 'api') {
+        return Auth::Guard($guard);
     }
 }
