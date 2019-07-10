@@ -10,6 +10,9 @@ import {initialize} from './helpers/general';
 Vue.use(VueRouter);
 Vue.use(Vuex);
 
+// Plugins
+import './plugins'
+
 const store = new Vuex.Store(StoreData);
 
 const router = new VueRouter({

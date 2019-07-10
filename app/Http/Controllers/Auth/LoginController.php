@@ -47,38 +47,99 @@ class LoginController extends Controller
     }
 
     public function login(Request $request){
-        $this->validate($request, [
-            'email'   => 'required|email',
-            'password' => 'required|min:6'
-        ]);
+        if($request->guard == 'admin'){
+            $this->validate($request, [
+                'email'   => 'required|email',
+                'password' => 'required|min:6'
+            ]);
+            if( Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember')) ){
+                $user = Auth::guard('admin')->user();
+                $userData = [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'guard' => 'admin'
+                ];
+                $response = [
+                    'success' => 1,
+                    'access_token' => $user->createToken('MyApp')->accessToken,
+                    'user' => $userData,
+                    'message' => __('messages.loggedin'),
+                ];
 
-        //Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))
-        //Auth::guard('driver')->attempt(['phone' => $request->phone, 'password' => $request->password], $request->get('remember'))
-        //Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))
+                return response()->json($response, $this->successStatus);
+            } else {
+                return response()->json([
+                    'success' => 0,
+                    'message' => __('messages.invalid_email_pass'),
+                ], $this->successStatus);
+            }
+        } elseif($request->guard == 'driver'){
+            $this->validate($request, [
+                'phone'   => 'required',
+                'password' => 'required|min:6'
+            ]);
+            if( Auth::guard('driver')->attempt(['phone' => $request->phone, 'password' => $request->password], $request->get('remember')) ){
+                $user = Auth::guard('driver')->user();
+                $userData = [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'guard' => 'admin'
+                ];
+                $response = [
+                    'success' => 1,
+                    'access_token' => $user->createToken('MyApp')->accessToken,
+                    'user' => $userData,
+                    'message' => __('messages.loggedin'),
+                ];
 
-        $guard = 'api';
-        if(!empty($request->guard)){
-            $guard = $request->guard;
-        }
-        if (Auth::attempt([
-            'email' => $request->email,
-            'password' => $request->password,
-        ])) {
-            $user = $this->guard($guard)->user();
-            $response = [
-                'success' => 1,
-                'access_token' => $user->createToken('MyApp')->accessToken,
-                'user' => $user,
-                'message' => __('messages.loggedin'),
-            ];
-
-            return response()->json($response, $this->successStatus);
+                return response()->json($response, $this->successStatus);
+            } else {
+                return response()->json([
+                    'success' => 0,
+                    'message' => __('messages.invalid_email_pass'),
+                ], $this->successStatus);
+            }
         } else {
-            return response()->json([
-                'success' => 0,
-                'message' => __('messages.invalid_email_pass'),
-            ], $this->successStatus);
+            $this->validate($request, [
+                'email'   => 'required|email',
+                'password' => 'required|min:6'
+            ]);
+            if (Auth::attempt([
+                'email' => $request->email,
+                'password' => $request->password,
+            ])) {
+                $user = Auth::user();
+                $userData = [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'guard' => 'admin'
+                ];
+                $response = [
+                    'success' => 1,
+                    'access_token' => $user->createToken('MyApp')->accessToken,
+                    'user' => $userData,
+                    'message' => __('messages.loggedin'),
+                ];
+    
+                return response()->json($response, $this->successStatus);
+            } else {
+                return response()->json([
+                    'success' => 0,
+                    'message' => __('messages.invalid_email_pass'),
+                ], $this->successStatus);
+            }
         }
+        
+        return response()->json([
+            'success' => 0,
+            'message' => __('messages.invalid_action', ['action' => 'request']),
+        ], $this->successStatus);
     }
 
     public function logout(){
@@ -96,7 +157,7 @@ class LoginController extends Controller
         }
     }
 
-    public function guard($guard = 'api') {
+    /* public function guard($guard = 'api') {
         return Auth::Guard($guard);
-    }
+    } */
 }

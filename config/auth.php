@@ -45,13 +45,12 @@ return [
             'driver' => 'passport',
             'provider' => 'users'
         ],
-
         'admin' => [
-            'driver' => 'session',
+            'driver' => 'passport',
             'provider' => 'admins',
         ],
         'driver' => [
-            'driver' => 'session',
+            'driver' => 'passport',
             'provider' => 'drivers',
         ],
     ],

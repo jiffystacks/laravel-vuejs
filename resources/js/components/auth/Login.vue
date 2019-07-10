@@ -1,31 +1,75 @@
 <template>
-    <div class="login row justify-content-center">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">login</div>
-                <div class="card-body">
-                    <form @submit.prevent="authenticate">
-                        <div class="form-group row">
-                            <label for="email">Email:</label>
-                            <input type="email" v-model="form.email" class="form-control" placeholder="Email Address">
-                        </div>
-                        <div class="form-group row">
-                            <label for="password">Password:</label>
-                            <input type="password" v-model="form.password" class="form-control" placeholder="Password">
-                        </div>
-                        <div class="form-group row">
-                            <input type="submit" value="Login">
-                        </div>
-                        <div class="form-group row" v-if="authError">
-                            <p class="error">
-                                {{ authError }}
-                            </p>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <v-container>
+        <v-layout justify-center>
+            <v-flex xs12 sm10 md8>
+                <v-tabs
+                centered
+                color="cyan"
+                dark
+                slider-color="yellow"
+                >
+                    <v-tab href="#userlogin" @click="setGuard('api')">
+                        User Login
+                    </v-tab>
+                    <v-tab href="#driverlogin"  @click="setGuard('driver')">
+                        Driver Login
+                    </v-tab>
+                    <v-tab href="#adminlogin"  @click="setGuard('admin')">
+                        Admin Login
+                    </v-tab>
+
+                    <v-tab-item id="userlogin">
+                        <v-card>
+                        <v-card-text>
+                            <v-form ref="form" lazy-validation @submit.prevent="authenticate">
+                                <v-text-field v-model="form.email" :rules="emailRules" label="E-mail" required></v-text-field>
+                                
+                                <v-text-field v-model="form.password" label="Password" required type="password"></v-text-field>
+
+                                <v-btn color="success" type="submit">Login</v-btn>
+								
+								<v-alert :value="authError" type="error">{{ authError }}</v-alert>
+                            </v-form>
+                        </v-card-text>
+                        </v-card>
+                    </v-tab-item>
+                    <v-tab-item id="driverlogin">
+                        <v-card>
+                        <v-card-text>
+                            <v-form ref="form" lazy-validation @submit.prevent="authenticate">
+
+                                <v-text-field v-model="form.phone" label="Phone" required ></v-text-field>
+                                
+                                <v-text-field v-model="form.password" label="Password" required type="password"></v-text-field>
+
+                                <v-btn color="success" type="submit">Login</v-btn>
+								
+								<v-alert :value="authError" type="error">{{ authError }}</v-alert>
+                            </v-form>
+                            
+                        </v-card-text>
+                        </v-card>
+                    </v-tab-item>
+                    <v-tab-item id="adminlogin">
+                        <v-card>
+                        <v-card-text>
+                            <v-form ref="form" lazy-validation @submit.prevent="authenticate">
+
+                                <v-text-field v-model="form.email" :rules="emailRules" label="E-mail" required></v-text-field>
+                                
+                                <v-text-field v-model="form.password" label="Password" required type="password"></v-text-field>
+
+                                <v-btn color="success" type="submit">Login</v-btn>
+								
+								<v-alert :value="authError" type="error">{{ authError }}</v-alert>
+                            </v-form>
+                        </v-card-text>
+                        </v-card>
+                    </v-tab-item>   
+                </v-tabs>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
@@ -37,12 +81,21 @@
             return {
                 form: {
                     email: '',
-                    password: ''
+                    password: '',
+                    phone: '',
+                    guard: 'api'
                 },
-                error: null
+                error: null,
+                emailRules: [
+                    v => !!v || 'E-mail is required',
+                    v => /.+@.+/.test(v) || 'E-mail must be valid'
+                ],
             };
         },
         methods: {
+            setGuard(val){
+                this.form.guard = val;
+            },
             authenticate() {
                 this.$store.dispatch('login');
 
