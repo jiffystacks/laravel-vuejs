@@ -1904,16 +1904,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'home',
-  computed: {
-    welcome: function welcome() {
-      return this.$store.getters.welcome;
-    }
+  data: function data() {
+    return {
+      items: [{
+        src: '/img/arches-national-park-dark-dusk-33688.jpg'
+      }, {
+        src: '/img/breathtaking-calm-color-36478.jpg'
+      }, {
+        src: '/img/clouds-cloudy-countryside-236047.jpg'
+      }]
+    };
   }
 });
 
@@ -2075,12 +2076,16 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$store.dispatch('login');
       Object(_helpers_auth__WEBPACK_IMPORTED_MODULE_0__["login"])(this.$data.form).then(function (res) {
+        console.log('loggedin');
+
         _this.$store.commit("loginSuccess", res);
 
         _this.$router.push({
           path: '/'
         });
       })["catch"](function (error) {
+        console.log('login failed');
+
         _this.$store.commit("loginFailed", {
           error: error
         });
@@ -40009,21 +40014,20 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-8" }, [
-        _c("div", { staticClass: "card card-default" }, [
-          _c("div", { staticClass: "card-header" }, [
-            _vm._v("Vue.JS SPA example")
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c("h2", [_vm._v(_vm._s(_vm.welcome))])
-          ])
-        ])
-      ])
-    ])
-  ])
+  return _c(
+    "v-container",
+    [
+      _c(
+        "v-carousel",
+        { attrs: { "hide-delimiters": "" } },
+        _vm._l(_vm.items, function(item, i) {
+          return _c("v-carousel-item", { key: i, attrs: { src: item.src } })
+        }),
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -83729,7 +83733,7 @@ function login(credentials) {
         Object(_general__WEBPACK_IMPORTED_MODULE_0__["setAuthorization"])(response.data.access_token);
         res(response.data);
       } else {
-        rej(response.message);
+        rej(response.data.message);
       }
     })["catch"](function (err) {
       rej("Wrong email or password");
@@ -83905,10 +83909,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var routes = [{
   path: '/',
-  component: _components_Home_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
-  meta: {
-    requiresAuth: true
-  }
+  component: _components_Home_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
 }, {
   path: '/login',
   component: _components_auth_Login_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
@@ -83985,7 +83986,7 @@ var user = Object(_helpers_auth__WEBPACK_IMPORTED_MODULE_0__["getLocalUser"])();
     },
     loginFailed: function loginFailed(state, payload) {
       state.loading = false;
-      state.auth_error = payload.message;
+      state.auth_error = payload.error;
     },
     logout: function logout(state) {
       localStorage.removeItem("user");

@@ -8,7 +8,7 @@ export function login(credentials) {
                     setAuthorization(response.data.access_token);
                     res(response.data);
                 } else {
-                    rej(response.message);
+                    rej(response.data.message);
                 }
                 
             })

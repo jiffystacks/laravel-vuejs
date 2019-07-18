@@ -8,10 +8,7 @@ import Customer from './components/customers/View.vue';
 export const routes = [
     {
         path: '/',
-        component: Home,
-        meta: {
-            requiresAuth: true
-        }
+        component: Home
     },
     {
         path: '/login',

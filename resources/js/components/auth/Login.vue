@@ -101,10 +101,12 @@
 
                 login(this.$data.form)
                     .then((res) => {
+                        console.log('loggedin');
                         this.$store.commit("loginSuccess", res);
                         this.$router.push({path: '/'});
                     })
                     .catch((error) => {
+                        console.log('login failed');
                         this.$store.commit("loginFailed", {error});
                     });
             }

@@ -42,7 +42,7 @@ export default {
         },
         loginFailed(state, payload) {
             state.loading = false;
-            state.auth_error = payload.message;
+            state.auth_error = payload.error;
         },
         logout(state) {
             localStorage.removeItem("user");

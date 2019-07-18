@@ -18,7 +18,6 @@ Extendend [laravel multi auth](https://github.com/jiffystacks-technologies/larav
 * [Vue Router](http://router.vuejs.org)
 * [Vuex](http://vuex.vuejs.org)
 * [Axios](https://github.com/mzabriskie/axios)
-* [Authentication with JWT Token](https://github.com/tymondesigns/jwt-auth)
 * [Vuetify](https://vuetifyjs.com/en/getting-started/quick-start)
 * [Font Awesome](https://fontawesome.com)
 
