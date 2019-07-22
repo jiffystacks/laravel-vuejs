@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 use Illuminate\Http\Request;
 use Auth;
+use DB;
 use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
@@ -54,11 +55,13 @@ class LoginController extends Controller
             ]);
             if( Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember')) ){
                 $user = Auth::guard('admin')->user();
+                $roleObj = DB::table('roles')->where('id', $user->role)->first();
                 $userData = [
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'role' => $user->role,
+                    'role_id' => $user->role,
+                    'role' => $roleObj->name,
                     'guard' => 'admin'
                 ];
                 $response = [
@@ -82,12 +85,14 @@ class LoginController extends Controller
             ]);
             if( Auth::guard('driver')->attempt(['phone' => $request->phone, 'password' => $request->password], $request->get('remember')) ){
                 $user = Auth::guard('driver')->user();
+                $roleObj = DB::table('roles')->where('id', $user->role)->first();
                 $userData = [
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'role' => $user->role,
-                    'guard' => 'admin'
+                    'role_id' => $user->role,
+                    'role' => $roleObj->name,
+                    'guard' => 'driver'
                 ];
                 $response = [
                     'success' => 1,
@@ -113,12 +118,14 @@ class LoginController extends Controller
                 'password' => $request->password,
             ])) {
                 $user = Auth::user();
+                $roleObj = DB::table('roles')->where('id', $user->role)->first();
                 $userData = [
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'role' => $user->role,
-                    'guard' => 'admin'
+                    'role_id' => $user->role,
+                    'role' => $roleObj->name,
+                    'guard' => 'api'
                 ];
                 $response = [
                     'success' => 1,
