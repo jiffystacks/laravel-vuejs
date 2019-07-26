@@ -13,7 +13,7 @@ export const routes = [
         component: Login
     },
     {
-        path: 'dashboard',
+        path: '/dashboard',
         component: Dashboard,
         meta: {
             requiresAuth: true

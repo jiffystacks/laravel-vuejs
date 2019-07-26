@@ -1,4 +1,5 @@
 import { getLocalUser } from "./helpers/auth";
+import { set, toggle } from "./helpers/general";
 
 const user = getLocalUser();
 
@@ -8,7 +9,8 @@ export default {
         isLoggedIn: !!user,
         loading: false,
         auth_error: null,
-        customers: []
+        customers: [],
+        drawer: null,
     },
     getters: {
         isLoading(state) {
@@ -49,6 +51,8 @@ export default {
             state.isLoggedIn = false;
             state.currentUser = null;
         },
+        setDrawer: set('drawer'),
+        toggleDrawer: toggle('drawer'),
         updateCustomers(state, payload) {
             state.customers = payload;
         }

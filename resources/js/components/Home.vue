@@ -1,5 +1,4 @@
 <template>
-    <v-container>
         <v-carousel hide-delimiters>
             <v-carousel-item
               v-for="(item,i) in items"
@@ -7,7 +6,6 @@
               :src="item.src"
             ></v-carousel-item>
           </v-carousel>
-    </v-container>
 </template>
 
 <script>

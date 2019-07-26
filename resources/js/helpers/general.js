@@ -29,3 +29,7 @@ export function initialize(store, router) {
 export function setAuthorization(token) {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
 }
+
+export const set = property => (state, payload) => (state[property] = payload)
+
+export const toggle = property => state => (state[property] = !state[property])
