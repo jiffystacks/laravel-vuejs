@@ -1,6 +1,6 @@
-import Home from './components/Home.vue';
-import Login from './components/auth/Login.vue';
-import Dashboard from './components/admin/Dashboard.vue';
+import Home from './views/Home.vue';
+import Login from './views/auth/Login.vue';
+import Dashboard from './views/admin/Dashboard.vue';
 
 
 export const routes = [

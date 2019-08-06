@@ -17,5 +17,5 @@ Route::post('/login', 'Auth\LoginController@login');
 
 
 Route::group(['middleware' => 'auth:api'], function(){
-    Route::get('/customers', 'CommonController@customer');
+    Route::get('/dashboard', 'CommonController@getDashboard');
 });

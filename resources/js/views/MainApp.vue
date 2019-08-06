@@ -1,24 +1,24 @@
 <template>
     <v-app>
         <template v-if="!currentUser">
-            <Topbar />
+            <core-topbar />
             <div id="main">
                 <div class="content">
                     <router-view></router-view>
                 </div>
             </div>
-            <Footer/>
+            <core-footer/>
         </template>
         <template v-else>
-            <AuthTopbar />
-            <Drawer />
+            <core-auth-topbar />
+            <core-drawer />
             <v-content>
             <div id="core-view">
               <v-fade-transition mode="out-in">
                 <router-view />
               </v-fade-transition>
             </div>
-            <Footer/>
+            <core-footer/>
           </v-content>
         </template>
     </v-app>
@@ -34,18 +34,15 @@
 </style>
 
 <script>
-    import Footer from './core/Footer.vue';
-    import Topbar from './core/Topbar.vue';
-    import AuthTopbar from './core/AuthTopbar.vue';
-    import Drawer from './core/Drawer.vue';
-
     export default {
         name: 'main-app',
-        components: {Footer, Topbar, AuthTopbar, Drawer},
         computed: {
             currentUser() {
                 return this.$store.getters.currentUser
             }
+        },
+        mounted(){
+            console.log(this.$options.components);
         }
     }
 </script>

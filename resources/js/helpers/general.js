@@ -6,6 +6,7 @@ export function initialize(store, router) {
         if(requiresAuth && !currentUser) {
             next('/login');
         } else if(to.path == '/login' && currentUser) {
+            console.log('init login');
             next('/');
         } else {
             next();
